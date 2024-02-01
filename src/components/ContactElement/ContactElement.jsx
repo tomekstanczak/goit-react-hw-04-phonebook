@@ -9,12 +9,7 @@ export default class ContactElement extends Component {
   constructor() {
     super();
     this.state = {
-      contacts: [
-        { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-        { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-        { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-        { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-      ],
+      contacts: [],
       name: '',
       number: '',
       filter: '',
@@ -63,10 +58,47 @@ export default class ContactElement extends Component {
   };
 
   contactDelete = idContact => {
+    this.save(idContact);
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== idContact),
     }));
   };
+  save = (key, value) => {
+    try {
+      const savingContact = JSON.stringify(value);
+      localStorage.setItem(key, savingContact);
+    } catch (error) {
+      console.log('error');
+    }
+  };
+
+  load = key => {
+    try {
+      const savedContact = localStorage.getItem(key);
+      return savedContact === null ? undefined : JSON.parse(savedContact);
+    } catch (error) {
+      console.error('Get state error: ', error.message);
+    }
+  };
+
+  componentDidMount() {
+    const prevContacts = this.state.contacts;
+    const savedContacts = this.load('data');
+    if (savedContacts && Array.isArray(savedContacts)) {
+      const uniqueContacts = savedContacts.filter(
+        savedContact =>
+          !prevContacts.some(
+            prevContact =>
+              prevContact.name.toLowerCase() === savedContact.name.toLowerCase()
+          )
+      );
+      this.setState({ contacts: [...prevContacts, ...uniqueContacts] });
+    }
+  }
+
+  componentDidUpdate() {
+    this.save('data', this.state.contacts);
+  }
 
   render() {
     const filteredContacts = this.filterContacts();
