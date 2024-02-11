@@ -39,8 +39,8 @@ const ContactForm = ({ valueNumber, valueName, onChange, onSubmit }) => {
 };
 
 ContactForm.propTypes = {
-  valueNumber: PropTypes.number,
-  valueName: PropTypes.number,
+  valueNumber: PropTypes.string,
+  valueName: PropTypes.string,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
 };
