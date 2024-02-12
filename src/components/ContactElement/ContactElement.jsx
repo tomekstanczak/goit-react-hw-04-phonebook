@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid';
 import Filter from '../Filter/Filter';
 import ContactForm from '../ContactForm/ContactForm';
 import ContactList from 'components/ContactList/ContactList';
-import PropTypes from 'prop-types';
 
 export default function ContactElement() {
   const [contacts, setContacts] = useState([]);
@@ -69,8 +68,6 @@ export default function ContactElement() {
     localStorage.setItem('data', JSON.stringify(contacts));
   }, [contacts]);
 
-  const filteredContacts = filterContacts();
-
   return (
     <div>
       <h1>Phonebook</h1>
@@ -82,14 +79,7 @@ export default function ContactElement() {
       />
       <h2>Contacts</h2>
       <Filter value={filter} onChange={handleChange} />
-      <ContactList filteredList={filteredContacts} onClick={contactDelete} />
+      <ContactList filteredList={filterContacts()} onClick={contactDelete} />
     </div>
   );
 }
-
-ContactElement.propTypes = {
-  name: PropTypes.string,
-  number: PropTypes.string,
-  filter: PropTypes.string,
-  contacts: PropTypes.array,
-};
